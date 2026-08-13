@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusAI - AI Campus Opportunity Agent</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+        <div class="logo">
+            Campus<span>AI</span>
+        </div>
+
+        <div>
+            <a href="#features">Features</a>
+            <a href="#discover">Discover</a>
+            <a href="#deadlines">Deadlines</a>
+            <a href="#recommendations">For You</a>
+            <a href="#insights">Insights</a>
+            <a href="#ai">AI Assistant</a>
+        </div>
+
+    </nav>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <h1>
+            Your AI Agent for
+            <span>Campus Opportunities</span>
+        </h1>
+
+        <p>
+            Discover hackathons, internships, scholarships and
+            competitions personalized for you — all in one place.
+        </p>
+
+        <a href="#discover" class="btn">
+            Discover Opportunities →
+        </a>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="features" id="features">
+
+        <div class="card">
+            <h3>🔎 Smart Discovery</h3>
+            <p>
+                Find hackathons, internships, scholarships and
+                competitions based on your skills.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>📅 Deadline Tracker</h3>
+            <p>
+                Keep track of important opportunity deadlines
+                so you never miss an application.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Personalized Recommendations</h3>
+            <p>
+                Get opportunities matched to your skills and
+                interests.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>📝 Application Helper</h3>
+            <p>
+                Get preparation guidance for applications,
+                projects and competitions.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>📊 Opportunity Insights</h3>
+            <p>
+                Understand popular skills and opportunity trends.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>🤖 AI Assistant</h3>
+            <p>
+                Ask CampusAI questions and get instant assistance
+                for your campus journey.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- ================= DISCOVER ================= -->
+
+    <section class="hero" id="discover">
+
+        <h1>
+            Find your next
+            <span>opportunity.</span>
+        </h1>
+
+        <p>
+            CampusAI helps you discover opportunities that
+            actually match your skills.
+        </p>
+
+    </section>
+
+
+    <!-- ================= OPPORTUNITIES ================= -->
+
+    <section class="opportunity-section">
+
+        <h2>Discover Opportunities</h2>
+
+        <div class="filters">
+
+            <input
+                type="text"
+                id="skill-filter"
+                placeholder="Search by skill e.g. Python"
+            >
+
+            <select id="type-filter">
+
+                <option value="">All Types</option>
+
+                <option value="Hackathon">
+                    Hackathon
+                </option>
+
+                <option value="Internship">
+                    Internship
+                </option>
+
+                <option value="Contest">
+                    Contest
+                </option>
+
+                <option value="Competition">
+                    Competition
+                </option>
+
+            </select>
+
+            <button onclick="loadOpportunities()">
+                Search
+            </button>
+
+        </div>
+
+        <div id="opportunity-list"></div>
+
+    </section>
+
+
+    <!-- ================= DEADLINE TRACKER ================= -->
+
+    <section
+        class="deadline-section"
+        id="deadlines"
+    >
+
+        <h2>
+            📅 Upcoming Deadlines
+        </h2>
+
+        <div id="deadline-list"></div>
+
+    </section>
+
+
+    <!-- ================= RECOMMENDATIONS ================= -->
+
+    <section
+        class="recommendation-section"
+        id="recommendations"
+    >
+
+        <h2>
+            🎯 Recommended For You
+        </h2>
+
+        <p>
+            Enter your Student ID and CampusAI will recommend
+            opportunities based on your saved skills.
+        </p>
+
+        <div class="recommendation-search">
+
+            <input
+                type="number"
+                id="student-id-input"
+                placeholder="Enter Student ID e.g. 4"
+            >
+
+            <button onclick="loadRecommendations()">
+                Get Recommendations
+            </button>
+
+        </div>
+
+        <div id="recommendation-list"></div>
+
+    </section>
+
+
+    <!-- ================= APPLICATION HELPER ================= -->
+
+    <section
+        class="application-section"
+        id="application-helper"
+    >
+
+        <h2>
+            📝 Application Helper
+        </h2>
+
+        <p>
+            Get preparation guidance for your opportunity.
+        </p>
+
+        <div class="application-form">
+
+            <input
+                type="text"
+                id="opportunity-input"
+                placeholder="Opportunity name"
+            >
+
+            <input
+                type="text"
+                id="application-skills"
+                placeholder="Your skills e.g. Python, AI, FastAPI"
+            >
+
+            <button onclick="getApplicationHelp()">
+                Get Preparation Guide
+            </button>
+
+        </div>
+
+        <div id="application-result"></div>
+
+    </section>
+
+
+    <!-- ================= OPPORTUNITY INSIGHTS ================= -->
+
+    <section
+        class="insights-section"
+        id="insights"
+    >
+
+        <h2>
+            📊 Opportunity Insights
+        </h2>
+
+        <p>
+            See what skills and opportunity types are trending.
+        </p>
+
+        <div id="insights-result"></div>
+
+    </section>
+
+<!-- ================= STUDENT PROFILE ================= -->
+
+<section class="profile-section" id="profile">
+
+    <h2>👨‍🎓 Student Profile</h2>
+
+    <p>
+        Create or update your CampusAI profile to get
+        personalized opportunities.
+    </p>
+
+    <div class="profile-form">
+
+        <input
+            type="number"
+            id="student-id"
+            placeholder="Student ID (for update)"
+        >
+
+        <input
+            type="text"
+            id="student-name"
+            placeholder="Your Name"
+        >
+
+        <input
+            type="text"
+            id="student-college"
+            placeholder="College Name"
+        >
+
+        <input
+            type="text"
+            id="student-skills"
+            placeholder="Skills e.g. Python, AI, FastAPI"
+        >
+
+        <button onclick="saveStudent()">
+            Save Profile
+        </button>
+
+    </div>
+
+    <div id="profile-result"></div>
+
+</section>
+    <!-- ================= AI ASSISTANT ================= -->
+
+    <section
+        class="ai-section"
+        id="ai"
+    >
+
+        <h2>
+            🤖 CampusAI Assistant
+        </h2>
+
+        <p>
+            Ask anything about hackathons, internships,
+            competitions and your campus journey.
+        </p>
+
+        <div class="ai-chat">
+
+            <div id="ai-response">
+
+                <p>
+                    👋 Hi! I'm CampusAI.
+                    Ask me anything!
+                </p>
+
+            </div>
+
+            <div class="ai-input">
+
+                <input
+                    type="text"
+                    id="ai-question"
+                    placeholder="Ask CampusAI..."
+                >
+
+                <button onclick="askAI()">
+                    Ask
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
