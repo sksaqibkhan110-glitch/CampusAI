@@ -16,11 +16,22 @@ app = FastAPI(
 )
 
 
+# =========================
+# CORS
+# =========================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:5500",
-        "http://localhost:5500"
+        "http://localhost:5500",
+
+        # Vercel production
+        "https://campus-ai-dusky-sigma.vercel.app",
+
+        # Vercel preview domains
+        "https://campus-ai-git-main-sksaqibkhan110-glitchs-projects.vercel.app",
+        "https://campus-drcdzf8md-sksaqibkhan110-glitchs-projects.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -28,13 +39,22 @@ app.add_middleware(
 )
 
 
+# =========================
+# DATABASE
+# =========================
+
 def get_db():
     db = SessionLocal()
+
     try:
         yield db
     finally:
         db.close()
 
+
+# =========================
+# HOME
+# =========================
 
 @app.get("/")
 def home():
@@ -155,7 +175,8 @@ def get_opportunities(
             opportunity
             for opportunity in results
             if skill.lower() in [
-                s.lower() for s in opportunity["skills"]
+                s.lower()
+                for s in opportunity["skills"]
             ]
         ]
 
@@ -175,6 +196,7 @@ def get_opportunities(
 
 @app.get("/opportunities/recommended")
 def recommended_opportunities(skills: str):
+
     student_skills = [
         skill.strip().lower()
         for skill in skills.split(",")
@@ -183,6 +205,7 @@ def recommended_opportunities(skills: str):
     recommendations = []
 
     for opportunity in opportunities:
+
         opportunity_skills = [
             skill.lower()
             for skill in opportunity["skills"]
@@ -215,17 +238,22 @@ def recommended_opportunities(skills: str):
 
 @app.get("/opportunities/deadlines")
 def upcoming_deadlines():
+
     today = date.today()
 
     upcoming = []
 
     for opportunity in opportunities:
+
         deadline = date.fromisoformat(
             opportunity["deadline"]
         )
 
         if deadline >= today:
-            days_left = (deadline - today).days
+
+            days_left = (
+                deadline - today
+            ).days
 
             upcoming.append({
                 **opportunity,
@@ -248,6 +276,7 @@ def application_helper(
     opportunity: str,
     skills: str
 ):
+
     skill_list = [
         skill.strip()
         for skill in skills.split(",")
@@ -265,6 +294,7 @@ def application_helper(
         ]
     }
 
+
 # =========================
 # STUDENT AI RECOMMENDATIONS
 # =========================
@@ -274,6 +304,7 @@ def student_recommendations(
     student_id: int,
     db: Session = Depends(get_db)
 ):
+
     student = db.query(Student).filter(
         Student.id == student_id
     ).first()
@@ -299,6 +330,7 @@ def student_recommendations(
     recommendations = []
 
     for opportunity in opportunities:
+
         opportunity_skills = [
             skill.lower()
             for skill in opportunity["skills"]
@@ -327,18 +359,23 @@ def student_recommendations(
         "skills": student.skills,
         "recommendations": recommendations
     }
+
+
 # =========================
 # OPPORTUNITY INSIGHTS
 # =========================
 
 @app.get("/opportunities/insights")
 def opportunity_insights():
+
     total = len(opportunities)
 
     types = {}
 
     for opportunity in opportunities:
+
         opportunity_type = opportunity["type"]
+
         types[opportunity_type] = (
             types.get(opportunity_type, 0) + 1
         )
@@ -346,8 +383,11 @@ def opportunity_insights():
     skills = {}
 
     for opportunity in opportunities:
+
         for skill in opportunity["skills"]:
+
             skill = skill.lower()
+
             skills[skill] = (
                 skills.get(skill, 0) + 1
             )
