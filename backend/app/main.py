@@ -1,4 +1,5 @@
 from app.ai.ai_service import generate_response
+
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -22,18 +23,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
-
-        # Vercel production
-        "https://campus-ai-dusky-sigma.vercel.app",
-
-        # Vercel preview domains
-        "https://campus-ai-git-main-sksaqibkhan110-glitchs-projects.vercel.app",
-        "https://campus-drcdzf8md-sksaqibkhan110-glitchs-projects.vercel.app"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -48,6 +39,7 @@ def get_db():
 
     try:
         yield db
+
     finally:
         db.close()
 
@@ -75,12 +67,20 @@ def health():
 # STUDENTS
 # =========================
 
-@app.get("/students", response_model=list[StudentResponse])
-def students(db: Session = Depends(get_db)):
+@app.get(
+    "/students",
+    response_model=list[StudentResponse]
+)
+def students(
+    db: Session = Depends(get_db)
+):
     return db.query(Student).all()
 
 
-@app.post("/students", response_model=StudentResponse)
+@app.post(
+    "/students",
+    response_model=StudentResponse
+)
 def create_student(
     student: StudentCreate,
     db: Session = Depends(get_db)
@@ -98,15 +98,20 @@ def create_student(
     return new_student
 
 
-@app.put("/students/{student_id}", response_model=StudentResponse)
+@app.put(
+    "/students/{student_id}",
+    response_model=StudentResponse
+)
 def update_student(
     student_id: int,
     student: StudentCreate,
     db: Session = Depends(get_db)
 ):
-    existing_student = db.query(Student).filter(
-        Student.id == student_id
-    ).first()
+    existing_student = (
+        db.query(Student)
+        .filter(Student.id == student_id)
+        .first()
+    )
 
     if not existing_student:
         raise HTTPException(
@@ -129,9 +134,11 @@ def delete_student(
     student_id: int,
     db: Session = Depends(get_db)
 ):
-    student = db.query(Student).filter(
-        Student.id == student_id
-    ).first()
+    student = (
+        db.query(Student)
+        .filter(Student.id == student_id)
+        .first()
+    )
 
     if not student:
         raise HTTPException(
@@ -184,7 +191,8 @@ def get_opportunities(
         results = [
             opportunity
             for opportunity in results
-            if opportunity["type"].lower() == type.lower()
+            if opportunity["type"].lower()
+            == type.lower()
         ]
 
     return results
@@ -195,8 +203,9 @@ def get_opportunities(
 # =========================
 
 @app.get("/opportunities/recommended")
-def recommended_opportunities(skills: str):
-
+def recommended_opportunities(
+    skills: str
+):
     student_skills = [
         skill.strip().lower()
         for skill in skills.split(",")
@@ -299,15 +308,19 @@ def application_helper(
 # STUDENT AI RECOMMENDATIONS
 # =========================
 
-@app.get("/students/{student_id}/recommendations")
+@app.get(
+    "/students/{student_id}/recommendations"
+)
 def student_recommendations(
     student_id: int,
     db: Session = Depends(get_db)
 ):
 
-    student = db.query(Student).filter(
-        Student.id == student_id
-    ).first()
+    student = (
+        db.query(Student)
+        .filter(Student.id == student_id)
+        .first()
+    )
 
     if not student:
         raise HTTPException(
@@ -343,6 +356,7 @@ def student_recommendations(
         ]
 
         if matched_skills:
+
             recommendations.append({
                 **opportunity,
                 "matched_skills": matched_skills,
